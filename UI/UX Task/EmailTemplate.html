@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Newsletter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+    }
+    .header {
+      background-color: #ffe3d4;
+      padding: 20px;
+      text-align: left;
+    }
+    .header h2 {
+      margin: 0;
+      color: #222;
+    }
+    .intro {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+    }
+    .intro-text {
+      width: 55%;
+    }
+    .intro img {
+      width: 40%;
+    }
+    .button {
+      background-color: #ff4f00;
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      display: inline-block;
+      border-radius: 5px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    .features-section {
+      background-color: #ffffff;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      text-align: left;
+      margin-top: 20px;
+    }
+    .feature {
+      width: 45%;
+      margin-bottom: 20px;
+    }
+    .feature img {
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+    .footer {
+      background-color: #ffe3d4;
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: #333;
+    }
+    .social-icons img {
+      width: 24px;
+      margin: 0 5px;
+    }
+    @media screen and (max-width: 600px) {
+      .intro {
+        flex-direction: column;
+        text-align: center;
+      }
+      .intro-text, .intro img {
+        width: 100%;
+      }
+      .features {
+        flex-direction: column;
+      }
+      .feature {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <!-- Header -->
+    <div class="header">
+      <h2>Weekly Newsletter</h2>
+    </div>
+
+    <!-- Intro Section -->
+    <div class="intro">
+      <div class="intro-text">
+        <h3>Don't miss out our <strong>BIG news!</strong></h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut augue nulla, mattis eget ante ac.</p>
+        <a href="#" class="button">Go to your account!</a>
+      </div>
+      <img src="Screenshot 2025-07-31 221322.png" alt="Newsletter">
+    </div>
+
+    <!-- Features -->
+    <div class="features-section">
+      <h4 style="color: red; text-transform: uppercase;">New Releases</h4>
+      <h2>Checkout our amazing features</h2>
+
+      <div class="features">
+        <div class="feature">
+          <p><img src="https://img.icons8.com/fluency/24/clock.png"/> <strong>Timer</strong></p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+        <div class="feature">
+          <p><img src="Screenshot 2025-07-31 222454.png"/> <strong>Measure tool</strong></p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+        <div class="feature">
+          <p><img src="Screenshot 2025-07-31 222315.png"/> <strong>Slider</strong></p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+        <div class="feature">
+          <p><img src="Screenshot 2025-07-31 222046.png"/> <strong>Users</strong></p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </div>
+      </div>
+
+      <a href="#" class="button" style="margin-top: 20px;">Go to your account!</a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="social-icons">
+        <a href="#"><img src="https://img.icons8.com/color/48/facebook-new.png"/></a>
+        <a href="#"><img src="https://img.icons8.com/color/48/twitter.png"/></a>
+        <a href="#"><img src="https://img.icons8.com/color/48/instagram-new.png"/></a>
+      </div>
+      <p>You received this email because you signed up on our website or made a purchase from us.</p>
+      <a href="#" style="color: #000;">Unsubscribe</a>
+    </div>
+  </div>
+</body>
+</html>
