@@ -1,84 +1,111 @@
-import pandas as pd
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 import tkinter as tk
 from tkinter import ttk, messagebox
+import math
 
-# Sample movie data
-data = {
-    'title': [
-        'The Matrix', 'Inception', 'Interstellar', 'The Dark Knight',
-        'Pulp Fiction', 'Fight Club', 'The Prestige', 'Memento',
-        'The Shawshank Redemption', 'Forrest Gump'
-    ],
-    'genre': [
-        'Sci-Fi Action', 'Sci-Fi Thriller', 'Sci-Fi Drama', 'Action Crime',
-        'Crime Drama', 'Drama Thriller', 'Mystery Drama', 'Mystery Thriller',
-        'Drama', 'Comedy Drama'
-    ],
-    'keywords': [
-        'hacker reality future', 'dream heist subconscious', 'space time blackhole',
-        'batman joker chaos', 'mob hitmen redemption', 'underground fight club',
-        'magic rivalry illusion', 'memory loss revenge', 'prison escape hope',
-        'life journey simplicity'
-    ]
-}
+# Book data
+titles = [
+    'Harry Potter', 'The Lord of the Rings', 'The Da Vinci Code',
+    'To Kill a Mockingbird', 'The Great Gatsby',
+    '1984', 'Pride and Prejudice', 'Moby Dick',
+    'War and Peace', 'The Alchemist'
+]
 
-# Create DataFrame
-df = pd.DataFrame(data)
+genres = [
+    'Fantasy Magic', 'Fantasy Adventure', 'Mystery Thriller',
+    'Classic Drama', 'Classic Romance',
+    'Dystopian Political', 'Romance Classic', 'Adventure Sea',
+    'Historical War', 'Philosophy Adventure'
+]
+
+keywords = [
+    'wizard magic school', 'ring power journey',
+    'murder mystery symbols', 'justice childhood racism',
+    'wealth love tragedy', 'totalitarian society control',
+    'love manners society', 'whale captain revenge',
+    'russia napoleon family', 'dreams destiny spirituality'
+]
 
 # Combine features
-def combine_features(row):
-    return f"{row['genre']} {row['keywords']}"
+combined_data = [f"{genres[i]} {keywords[i]}" for i in range(len(titles))]
 
-df['combined'] = df.apply(combine_features, axis=1)
+# Tokenize vocabulary
+def build_vocabulary(data):
+    vocab = set()
+    for doc in data:
+        for word in doc.lower().split():
+            vocab.add(word)
+    return sorted(list(vocab))
 
-# Vectorize text
-vectorizer = CountVectorizer().fit_transform(df['combined'])
-similarity = cosine_similarity(vectorizer)
+vocab = build_vocabulary(combined_data)
 
-# Get movie index
+# Convert text to vector
+def text_to_vector(text):
+    words = text.lower().split()
+    vector = [words.count(word) for word in vocab]
+    return vector
+
+# Cosine similarity
+def cosine_similarity(vec1, vec2):
+    dot = sum(a * b for a, b in zip(vec1, vec2))
+    mag1 = math.sqrt(sum(a * a for a in vec1))
+    mag2 = math.sqrt(sum(b * b for b in vec2))
+    return dot / (mag1 * mag2) if mag1 and mag2 else 0.0
+
+vectors = [text_to_vector(doc) for doc in combined_data]
+
 def get_index(title):
-    for i, t in enumerate(df['title']):
+    for i, t in enumerate(titles):
         if title.lower() in t.lower():
             return i
     return None
 
-# Recommendation function
 def recommend(title, n=5):
     idx = get_index(title)
     if idx is None:
         return []
-    scores = list(enumerate(similarity[idx]))
-    scores = sorted(scores, key=lambda x: x[1], reverse=True)[1:n+1]
-    return [df['title'][i[0]] for i in scores]
+    target_vec = vectors[idx]
+    scores = []
+    for i, vec in enumerate(vectors):
+        if i != idx:
+            sim = cosine_similarity(target_vec, vec)
+            scores.append((i, sim))
+    scores.sort(key=lambda x: x[1], reverse=True)
+    return [titles[i] for i, _ in scores[:n]]
 
 # GUI
 def get_recommendations():
-    selected_movie = movie_var.get()
-    if not selected_movie:
-        messagebox.showwarning("Input Error", "Please select or enter a movie.")
+    selected_book = book_var.get()
+    if not selected_book:
+        messagebox.showwarning("Input Error", "Please select or enter a book.")
         return
-    result = recommend(selected_movie)
+    result = recommend(selected_book)
     if result:
         result_var.set("\n".join(result))
     else:
-        result_var.set("Movie not found. Try another.")
+        result_var.set("Book not found. Try another.")
 
 root = tk.Tk()
-root.title("Movie Recommender")
-root.geometry("400x350")
-root.resizable(False, False)
+root.title("Book Recommender")
 
-tk.Label(root, text="Select or type a movie:", font=("Arial", 13)).pack(pady=10)
-movie_var = tk.StringVar()
-movie_dropdown = ttk.Combobox(root, textvariable=movie_var, values=list(df['title']), font=("Arial", 12), width=30)
-movie_dropdown.pack()
+# Make window full screen
+root.state("zoomed")  # For Windows
+# root.attributes("-fullscreen", True)  # Alternative, works on all OS
 
-tk.Button(root, text="Recommend", font=("Arial", 12), command=get_recommendations).pack(pady=10)
+# Heading
+tk.Label(root, text="📚 Book Recommendation System", font=("Arial", 20, "bold")).pack(pady=20)
 
+# Input field
+book_var = tk.StringVar()
+tk.Label(root, text="Select or type a book:", font=("Arial", 15)).pack(pady=10)
+book_dropdown = ttk.Combobox(root, textvariable=book_var, values=titles, font=("Arial", 14), width=50)
+book_dropdown.pack(pady=5)
+
+# Button
+tk.Button(root, text="🔍 Recommend", font=("Arial", 14, "bold"), command=get_recommendations, bg="lightblue").pack(pady=20)
+
+# Results
 result_var = tk.StringVar()
-tk.Label(root, text="Recommendations:", font=("Arial", 13)).pack()
-tk.Label(root, textvariable=result_var, font=("Arial", 12), justify="left", wraplength=350).pack(pady=10)
+tk.Label(root, text="Recommendations:", font=("Arial", 15, "underline")).pack(pady=10)
+tk.Label(root, textvariable=result_var, font=("Arial", 14), justify="left", wraplength=1000).pack(pady=10)
 
 root.mainloop()
